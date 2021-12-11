@@ -1,0 +1,4 @@
+https://github.com/davideschiavone/pulpissimo
+https://github.com/riscv-software-src/riscv-tests
+https://riscv.org/wp-content/uploads/2015/01/riscv-testing-frameworks-bootcamp-jan2015.pdf
+https://iis-git.ee.ethz.ch/ara_public/riscv-tests/-/tree/master
