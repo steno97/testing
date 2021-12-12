@@ -2,8 +2,8 @@
          .global _march
          .type _march, @function
          
-		.equ TEST_MARCH_SUCCESS 1
-		.equ TEST_MARCH_FAIL 0
+		.equ TEST_MARCH_SUCCESS 0
+		.equ TEST_MARCH_FAIL 1
 		.equ mem 0x00240000
 		.equ value1	0xFFFFFFFF
 		.equ value0	0x00000000
