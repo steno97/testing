@@ -1,0 +1,57 @@
+#=======================================================================
+# Makefrag for rv64ui tests
+#-----------------------------------------------------------------------
+
+rv64uv_sc_tests = \
+                vadd \
+                vsub \
+                vsl \
+                vsr \
+                vand \
+                vor  \
+                vxor \
+                vseq \
+                vsne \
+                vslt \
+                vsge \
+                vmpop \
+                vmfirst \
+                vext \
+                vins \
+                vmerge \
+                vrgather \
+                vdiv \
+                vrem \
+                vmul \
+                vmulh \
+                vmin \
+                vmax \
+                vaddi \
+                vsli \
+                vsri \
+                vandi \
+                vori \
+                vxori \
+                vmergei \
+                vslide \
+                vmadd \
+                vmsub \
+                vnmadd \
+                vnmsub \
+                vsgnj \
+                vsgnjn \
+                vsgnjx \
+                vsqrt \
+                vclass \
+                vpopc \
+                vld \
+                vlds \
+                vldx \
+                vst \
+                vsts \
+                vstx \
+                vreduction
+
+rv64uv_p_tests = $(addprefix rv64uv-p-, $(rv64uv_sc_tests))
+
+spike_ctests += $(rv64uv_p_tests)

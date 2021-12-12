@@ -1,0 +1,3 @@
+[submodule "riscv-test-env"]
+	path = env
+	url = git@iis-git.ee.ethz.ch:ara_public/riscv-test-env.git
