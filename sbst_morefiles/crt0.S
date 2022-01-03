@@ -50,7 +50,8 @@ _start:
 
 /* Invoke MARCH test */
 
-        call _run_march_algorithm
+      call _run_march_algorithm
+stop: bnez a0, stop
 
 /* initialize global pointer */
 .option push

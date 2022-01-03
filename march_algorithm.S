@@ -4,11 +4,16 @@
 
                 .equ TEST_MARCH_SUCCESS, 0
                 .equ TEST_MARCH_FAIL, 1
+                .equ mem, 0x001C0000
                 .equ value0,    0x00200000
                 .equ finemem,   0x00240000
 _run_march_algorithm:
+                //scrivo zero in memoria
+                //salvo la memoria all'indirizzo 0x00240000
+
 
         li t0,finemem
+        //mv t6,mem
         li t4,value0
 step1:  lw t3,(t4)
         nop
@@ -16,9 +21,11 @@ step1:  lw t3,(t4)
         nop
         nop
         nop
+        //sw t3,(t6)            //salvo il valore nello spazio libero
         mv t3, x0
         sw t3,(t4)              //carico il valore zero nella memoria
         addi t4,t4,4            //incremento entrambi gli indirizzi
+        //addi t6,t6,4
         blt t4,t0, step1        //itero fino a che non raggiungo la fine di dataram (0x0020000)
 
 
@@ -40,6 +47,7 @@ step2:  lw t3,(t4)
         li t0,value0
         li t1,0x1
         li t2,0x4
+        //li t4,finemem
         li t4,finemem
         sub t4,t4,t2
 step3:  nop
@@ -68,9 +76,25 @@ step3:  nop
         bnez t3,fail
         bge t4,t0, step3
 
+/*
+        mv t6,mem
+        li t0,finemem
+step4:  lw t3,(t6)
+        nop
+        nop
+        nop
+        nop
+        addi t6,t6,4
+        sw t3,(t4)      //ricarico i vecchi valori nella memoria
+        addi t4,t4,4                    //incremento entrambi gli indirizzi
+        blt t4,t0, step4
+*/
 
-        li a0,TEST_MARCH_SUCCESS
+        li t6,TEST_MARCH_SUCCESS
+        sw t6,(sp)
         ret
 
-fail:   li a0,TEST_MARCH_FAIL
+fail:   li t6,TEST_MARCH_FAIL
+        sw t6, (sp)
         ret
+
