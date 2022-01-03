@@ -48,6 +48,10 @@ _start:
 	li x30, 0
 	li x31, 0
 
+/* Invoke MARCH test */
+
+        call _run_march_algorithm
+
 /* initialize global pointer */
 .option push
 .option norelax

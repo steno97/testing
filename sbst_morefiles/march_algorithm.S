@@ -6,7 +6,6 @@
                 .equ TEST_MARCH_FAIL, 1
                 .equ mem, 0x001C0000
                 .equ value0,    0x00200000
-                //.equ finemem, 0x00240000
                 .equ finemem,   0x00240000
 _run_march_algorithm:
                 //scrivo zero in memoria
