@@ -52,7 +52,7 @@ step3:  nop
         nop
         nop
         bne t3,t1,fail  //in questo ciclo leggo 1 e scrivo zero, leggo subito zero e decremento gli indirizzi
-                //riciclo finche non arrivo all'inzio della memoria
+        li t3,0x0        //riciclo finche non arrivo all'inzio della memoria
         sw t3,(t4)
         nop
         nop
