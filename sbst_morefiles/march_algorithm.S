@@ -1,76 +1,48 @@
-  .section .text
-        .global _run_march_algorithm
-        .type _run_march_algorithm, @function
+	.section .text
+	.global _run_march_algorithm
+    .type _run_march_algorithm, @function
 
-                .equ TEST_MARCH_SUCCESS, 0
-                .equ TEST_MARCH_FAIL, 1
-                .equ value0,    0x00200000
-                .equ finemem,   0x00240000
 _run_march_algorithm:
+	
+        /* Write 0 */
+        lui	    t0, %hi(__RAM_SIZE)
+        addi	t0, t0, %lo(__RAM_SIZE)
+        srli	t0, t0, 2
+        lui	    t1, %hi(__RAM_START)
+        addi	t1, t1, %lo(__RAM_START)
+        lp.setup x0, t0, el0
+        sw 	    x0, (t1)
+el0:	addi 	t1, t1, 4
 
-        li t0,finemem
-        li t4,value0
-step1:  lw t3,(t4)
-        nop
-        nop
-        nop
-        nop
-        nop
-        mv t3, x0
-        sw t3,(t4)              //carico il valore zero nella memoria
-        addi t4,t4,4            //incremento entrambi gli indirizzi
-        blt t4,t0, step1        //itero fino a che non raggiungo la fine di dataram (0x0020000)
+        /* Read 0, write 1 */
+        lui	    t0, %hi(__RAM_SIZE)
+        addi	t0, t0, %lo(__RAM_SIZE)
+        srli	t0, t0, 2
+        lui	    t1, %hi(__RAM_END)
+        addi	t1, t1, %lo(__RAM_END)
+        addi	t1, t1, -4
+        lp.setup x0, t0, el1
+        lw      t2, (t1)
+        bne     t2, x0, fail
+        ori     t2, x0, -1
+        sw       t2, (t1)
+el1:	addi    t1, t1, -4
 
+        /* Read 1, write 0 */
+        lui	    t0, %hi(__RAM_SIZE)
+        addi	t0, t0, %lo(__RAM_SIZE)
+        srli	t0, t0, 2
+        lui	    t1, %hi(__RAM_START)
+        addi	t1, t1, %lo(__RAM_START)
+        ori	    t3, x0, -1
+        lp.setup x0, t0, el2
+        lw      t2, (t1)
+        bne     t2, t3, fail
+        sw      x0, (t1)
+el2:	addi    t1, t1, 4
 
-        li t0,finemem
-        li t4,value0    //inizzializzo di nuovo gli indirizzi di memoria
-step2:  lw t3,(t4)
-        nop
-        nop
-        nop
-        nop
-        nop
-        bnez t3,fail
-        li t3,1       //successivamente se non sono arrivato all'inizio della memoria riciclo
-        sw t3,(t4)
-        addi t4,t4,4 //in questo ciclo leggo zero e scrivo uno, e incremento la memoria
-        blt t4,t0, step2
-
-
-        li t0,value0
-        li t1,0x1
-        li t2,0x4
-        li t4,finemem
-        sub t4,t4,t2
-step3:  nop
-        nop
-        nop
-        lw t3,(t4)
-        nop
-        nop
-        nop
-        nop
-        nop
-        bne t3,t1,fail  //in questo ciclo leggo 1 e scrivo zero, leggo subito zero e decremento gli indirizzi
-        li t3,0x0        //riciclo finche non arrivo all'inzio della memoria
-        sw t3,(t4)
-        nop
-        nop
-        nop
-        nop
-        nop
-        lw t3,(t4)
-        nop
-        nop
-        nop
-        nop
-        sub t4,t4,t2
-        bnez t3,fail
-        bge t4,t0, step3
-
-
-        li a0,TEST_MARCH_SUCCESS
+        or      a0, x0, x0
         ret
 
-fail:   li a0,TEST_MARCH_FAIL
+fail:   ori     a0, x0, 1
         ret
