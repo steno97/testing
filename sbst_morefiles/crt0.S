@@ -67,6 +67,25 @@ stop: bnez a0, stop
 	la a0, __vector_start
 	csrw mtvec, a0
 
+/* copy all INITIALIZED data sections from ROM to RAM */
+	la a0, __TEST_DATA_START
+	la a2, __TEST_DATA_END
+	sub a2, a2, a0
+	la a1, __ROM_TEST_DATA_START
+	call memcpy
+
+	la a0, __DATA_BEGIN__
+	la a2, __DATA_END__
+	sub a2, a2, a0
+	la a1, __ROM_DATA_BEGIN__
+	call memcpy
+
+	la a0, __SDATA_BEGIN__
+	la a2, __SDATA_END__
+	sub a2, a2, a0
+	la a1, __ROM_SDATA_BEGIN__
+	call memcpy
+
 /* clear the bss segment */
 	la a0, __bss_start
 	la a2, __bss_end
@@ -83,8 +102,10 @@ stop: bnez a0, stop
 	call _sbst_boot
 
 /* call main */
-	lw a0, 0(sp)                    /* a0 = argc */
-	addi a1, sp, __SIZEOF_POINTER__ /* a1 = argv */
+	//lw a0, 0(sp)                    /* a0 = argc */
+    li a0, 0
+	//addi a1, sp, __SIZEOF_POINTER__ /* a1 = argv */
+    li a1, 0
 	li a2, 0                        /* a2 = envp = NULL */
 	call main
 	tail exit

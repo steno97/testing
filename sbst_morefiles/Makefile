@@ -17,6 +17,7 @@ $(PROGRAM_NAME).elf: crt0.S main.c syscalls.c vectors.S sbst_alu0.S sbst_alu1.S 
 
 %.hex: %.elf
 	$(RISCV_EXE_PREFIX)objcopy -O verilog $< $@
+	sed -i 's/@0020/@001C/; s/@0021/@001D/; s/@0022/@001E/; s/@0023/@001F/' $@
 
 clean:
 	rm -rf $(PROGRAM_NAME).elf $(PROGRAM_NAME).hex $(PROGRAM_NAME).map

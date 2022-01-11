@@ -21,7 +21,8 @@ MEMORY
 	   allowing initialized sections to be placed there). Infact we dump all
 	   sections to ram. */
 
-	instrram (rxai) : ORIGIN = 0x00000000, LENGTH = 0x200000
+	instrram (rxai) : ORIGIN = 0x00000000, LENGTH = 0x1C0000
+	copyram  (rxai) : ORIGIN = 0x001C0000, LENGTH = 0x40000
 	dataram  (rwai) : ORIGIN = 0x00200000, LENGTH = 0x40000
 }
 
@@ -30,6 +31,11 @@ SECTIONS
 
 
   __TEST_DATA_SIZE = 0x400;
+
+  /* TO BE USED BY THE MARCH TEST */
+  __RAM_START = ORIGIN(dataram);
+  __RAM_SIZE  = LENGTH(dataram);
+  __RAM_END   = __RAM_START + __RAM_SIZE;
 
  
   /* we want a fixed entry point */
@@ -273,6 +279,7 @@ SECTIONS
   .TEST_DATA         : ALIGN(16) 
   {
    __TEST_DATA_START = .;
+   __ROM_TEST_DATA_START = . - ORIGIN(dataram) + ORIGIN(copyram);
    *(.TEST_DATA)
    __TEST_DATA_END = .;
   } >dataram
@@ -281,13 +288,13 @@ SECTIONS
   .data           :
   {
     __DATA_BEGIN__ = .;
+    __ROM_DATA_BEGIN__ = . - ORIGIN(dataram) + ORIGIN(copyram);
     *(.data .data.* .gnu.linkonce.d.*)
     SORT(CONSTRUCTORS)
+    __DATA_END__ = .;
   } >dataram
-  .data1          :
-  {
-    *(.data1)
-  } > dataram
+  
+
 
   /* no dynamic linking, no object tables required */
   /* .got            : { *(.got.plt) *(.igot.plt) *(.got) *(.igot) } */
@@ -297,9 +304,11 @@ SECTIONS
      we can shorten the on-disk segment size.  */
   .sdata          :
   {
-    __SDATA_BEGIN__ = .;
+    __SDATA_BEGIN__ = .; 
+    __ROM_SDATA_BEGIN__ = . - ORIGIN(dataram) + ORIGIN(copyram);
     *(.srodata.cst16) *(.srodata.cst8) *(.srodata.cst4) *(.srodata.cst2) *(.srodata .srodata.*)
     *(.sdata .sdata.* .gnu.linkonce.s.*)
+    __SDATA_END__ = .;
   } >dataram
   _edata = .; PROVIDE (edata = .);
   . = .;
